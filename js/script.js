@@ -11,8 +11,9 @@ const Game = function(){
 const Flappy = function(){
   this.x = 0;
   this.y = 220;
-  this.width = 100;
-  this.height = 100;
+  this.width = 50;
+  this.height = 50;
+  this.isCrashed = false;
   this.image = `images/flappy.png`;
 }
 
@@ -60,10 +61,24 @@ function Obstacle (theX, theY, theWidth, theHeight){
     this.y = theY;
     this.width = theWidth;
     this.height = theHeight;
+    this.isTouched = false;
 }
 
 Obstacle.prototype.drawObstacle = function(){
-  ctx.fillStyle = "green";
+
+  if(currentGame.flappy.isCrashed === false){
+  this.x -= 2;
+  if(this.x < -this.width){
+    this.x = 1000;
+    }
+  }
+
+  if(this.isTouched){
+    ctx.fillStyle = "red"
+  } else {
+    ctx.fillStyle = "purple";
+  }
+
   ctx.fillRect(this.x, this.y, this.width, this.height);
 }
 
@@ -97,6 +112,11 @@ function drawEverything(){
   currentGame.flappy.draw();
   currentGame.obstacles.forEach((oneObstacle) => {
     oneObstacle.drawObstacle();
+    if(checkCollision(currentGame.flappy, oneObstacle)){
+      currentGame.flappy.isCrashed = true;
+      oneObstacle.isTouched = true;
+      gameOver();
+    }
   });
 }
 
@@ -108,4 +128,16 @@ function drawingLoop(){
   })
 }
 
+function checkCollision(obj1, obj2){
+    return obj1.y + obj1.height - 10 >= obj2.y
+      &&   obj1.y <= obj2.y + obj2.height
+      &&   obj1.x + obj1.width - 10 >= obj2.x
+      &&   obj1.x <= obj2.x + obj2.width
+}
+
+function gameOver (){
+ctx.font= "bold 70px Arial";
+ctx.fillStyle= "red";
+ctx.fillText("Game Over", 400, 220);
+}
 startGame();
