@@ -97,7 +97,7 @@ function startGame(){
     new Obstacle(800, 350, 30, 200),
     new Obstacle(970, 0, 30, 230),
     new Obstacle(1120, 300, 30, 250),
-    new Obstacle(1270, 0, 45, 200)
+    new Obstacle(1270, 0, 45, 200),
   ];
   // console.log(currentGame);
   drawingLoop();
